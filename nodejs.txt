@@ -1,0 +1,38 @@
+//update nodejs
+sudo npm cache clean -f
+sudo npm install -g n
+sudo n stable (or latest or any version u like)
+
+sudo ln -sf /usr/local/n/versions/node/<VERSION>/bin/node /usr/bin/node
+
+//install express framework
+npm install express-generator -g
+cd [root folder]
+express --view=ejs (use ejs view engine, should use because it's like java!! <3)
+(help: express -h)
+
+//start express app
+cd [root folder]
+DEBUG=[root folder]:* npm start
+(change env mode: DEBUG=[root folder]:* NODE_ENV=[mode name] npm start
+- development: print errors
+- other: not print errors)
+
+//install sequelize
+npm install --save sequelize sequelize-cli mysql
+cd [root folder]
+./node_modules/.bin/sequelize init
+
+//sequelize
+create model with sequelize cli:
+./node_modules/.bin/sequelize model:create --name user --attributes userName:string,abc:text
+
+function:
+Project.findById(123).then(function(project) {
+  // project will be an instance of Project and stores the content of the table entry
+  // with id 123. if such an entry is not defined you will get null
+})
+
+Project.findOne({ where: {title: 'aProject'} }).then(function(project) {
+  // project will be the first entry of the Projects table with the title 'aProject' || null
+})
