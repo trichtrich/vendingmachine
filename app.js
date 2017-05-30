@@ -30,7 +30,7 @@ app.use(cookieParser());
 app.use(session({
 	secret: 'SMKS8SFMKSMF'
 }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/admin-theme', express.static(path.join(__dirname, 'views/themes/admin-theme/public')));
 app.use(function(req, res, next) {
   res.locals.session = req.session;
   next();

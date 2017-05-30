@@ -1,1 +1,120 @@
-<% layout('themes/admin_theme/layout') -%>
+<% layout('themes/admin-theme/layout') -%>
+
+<!-- Breadcrumbs -->
+<ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/admin">Admin</a></li>
+    <li class="breadcrumb-item active">Users Manager</li>
+</ol>
+
+<div class="row" ng-controller="userController">
+    <div class="col-xl-12 col-sm-12 mb-12">
+        <table class="table table-hover table-bodered">
+        	<thead>
+        		<tr>
+        			<th>ID</th>
+        			<th>User Name</th>
+        			<th>Password</th>
+        			<th>Screen Name</th>
+        			<th>Status</th>
+        			<th>Action</th>
+        		</tr>
+        	</thead>
+        	<tbody>
+        		<tr ng-repeat="user in users">
+        			<td>{{ user.id }}</td>
+        			<td>{{ user.userName }}</td>
+        			<td>{{ user.passWord }}</td>
+        			<td>{{ user.screenName }}</td>
+        			<td>{{ user.status }}</td>
+        			<td>
+        				<a href="#" ng-click="updateUser(user.id)">Edit</a>
+        				<a href="#" ng-click="deleteUser(user.id)">Delete</a>
+        			</td>
+        		</tr>
+        	</tbody>
+        </table>
+
+        <form>
+            <div class="form-group">
+            	<label>User Name</label>
+                <input type="text" class="form-control" ng-model="formData.userName">
+            </div>
+
+            <div class="form-group">
+            	<label>Password</label>
+                <input type="text" class="form-control" ng-model="formData.passWord">
+            </div>
+
+            <div class="form-group">
+            	<label>Screen Name</label>
+                <input type="text" class="form-control" ng-model="formData.screenName">
+            </div>
+
+            <div class="form-group">
+            	<label>Status</label>
+                <input type="text" class="form-control" ng-model="formData.status">
+            </div>
+
+            <!-- createToDo() WILL CREATE NEW TODOS -->
+            <button type="submit" class="btn btn-primary" ng-click="createUser()">Add user</button>
+        </form>
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+var myApp = angular.module('myApp', []);
+
+myApp.controller('userController', function($scope, $http) {
+    $scope.formData = {};
+
+    // when landing on the page, get all todos and show them
+    $http.get('/users/findUsers').then(function(success) {
+        $scope.users = success.data;
+        console.log(success.data);
+    },function(error) {
+        console.log('Error: ' + error);
+    });
+
+    // when submitting the add form, send the text to the node API
+    $scope.createUser = function() {
+        $http.post('/users/createUser', $scope.formData).then(function(success) {
+	        $scope.users.push(success.data);
+	        console.log(success.data);
+	    },function(error) {
+	        console.log('Error: ' + error);
+	    });
+    };
+
+    // delete a todo after checking it
+    $scope.deleteUser = function(id) {
+        $http.get('/users/deleteUser?id=' + id).then(function(success) {
+	        $scope.users = $scope.users.filter(function(user) {
+    			return user.id != success.data;
+			});
+	        console.log(success.data);
+	    },function(error) {
+	        console.log('Error: ' + error);
+	    });
+    };
+
+    // update 
+
+    $scope.updateUser = function(id) {
+        $http.post('/users/updateUser?id=' + id, $scope.formData).then(function(success) {
+	        for (i in $scope.users) {
+	        	if ($scope.users[i].id == success.data.id) {
+	        		$scope.users[i] = success.data;
+	        		break;
+	        	}
+	        }
+	        console.log(success.data);
+	    },function(error) {
+	        console.log('Error: ' + error);
+	    });
+    };
+
+});
+</script>

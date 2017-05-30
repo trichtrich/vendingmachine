@@ -20,32 +20,34 @@ router.post('/', function(req, res, next) {
 		}],
 	where: { userName: userName, passWord: passWord }
 	}).then(function(user) {
-    var roles = [];
+    	var roles = [];
 		var permissions = [];
 		for (i in user.roles) {
-      roles.push({
-        id: user.roles[i].id,
-        roleName: user.roles[i].name
-      });
+	      	roles.push({
+	        	id: user.roles[i].id,
+	        	roleName: user.roles[i].name
+	      	});
 			for (j in user.roles[i].permissions) {
-        var permissionIds = permissions.map(permission => permission.id);
+        		var permissionIds = permissions.map(permission => permission.id);
 				if (permissionIds.indexOf(user.roles[i].permissions[j].id) == -1) {
 					permissions.push({
-            id: user.roles[i].permissions[j].id,
-            permissionName: user.roles[i].permissions[j].permissionName,
-            path: user.roles[i].permissions[j].path
-          });
+			            id: user.roles[i].permissions[j].id,
+			            permissionName: user.roles[i].permissions[j].permissionName,
+			            path: user.roles[i].permissions[j].path
+			        });
 				}
 			}
 		}
 
 		req.session.user = {
 			id: user.id,
-      roles: roles,
+      		roles: roles,
 			permissions: permissions
 		};
 		res.redirect('/admin');
-	})
+	}).catch(function(err) {
+		next();
+	});
 });
 
 module.exports = router;
