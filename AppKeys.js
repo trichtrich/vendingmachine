@@ -1,6 +1,6 @@
 var keys = {
 	Role: {
-		ADMIN: 1
+		ADMIN: 122
 	}
 }
 
